@@ -11,6 +11,8 @@ export const theme: DefaultTheme = {
         lightBg: '#F2F2F7',
         text: '#000000',
         textSecondary: '#6E6E73',
+        warning: '#FFC107',
+        border: '#D1D1D6',
     },
     radii: {
         sm: '8px',

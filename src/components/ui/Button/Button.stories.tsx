@@ -1,8 +1,11 @@
+import React from 'react';
+import { Meta, StoryFn } from '@storybook/react-vite';
 import { ThemeProvider } from 'styled-components';
 import { theme } from '../../../styles/theme';
-import { Button } from './Button';
+import { Button, ButtonProps } from './Button';
+import Icon from '../Icon/Icon';
 
-const meta: Meta<typeof Button> = {
+export default {
   title: 'UI/Button',
   component: Button,
   decorators: [
@@ -17,36 +20,75 @@ const meta: Meta<typeof Button> = {
       control: { type: 'select' },
       options: ['primary', 'secondary', 'outline', 'destructive'],
     },
+    size: {
+      control: { type: 'select' },
+      options: ['sm', 'md', 'lg'],
+    },
+    iconPosition: {
+      control: { type: 'radio' },
+      options: ['left', 'right'],
+    },
+    loading: {
+      control: 'boolean',
+    },
+    disabled: {
+      control: 'boolean',
+    },
   },
+} as Meta<typeof Button>;
+
+const Template: StoryFn<typeof Button> = (args: ButtonProps) => <Button {...args} />;
+
+export const Primary = Template.bind({});
+Primary.args = {
+  children: 'Сохранить',
+  variant: 'primary',
 };
 
-export default meta;
-type Story = StoryObj<typeof Button>;
-
-export const Primary: Story = {
-  args: {
-    variant: 'primary',
-    children: 'Сохранить',
-  },
+export const Secondary = Template.bind({});
+Secondary.args = {
+  children: 'Отмена',
+  variant: 'secondary',
 };
 
-export const Secondary: Story = {
-  args: {
-    variant: 'secondary',
-    children: 'Отмена',
-  },
+export const Outline = Template.bind({});
+Outline.args = {
+  children: 'Подробнее',
+  variant: 'outline',
 };
 
-export const Outline: Story = {
-  args: {
-    variant: 'outline',
-    children: 'Подробнее',
-  },
+export const Destructive = Template.bind({});
+Destructive.args = {
+  children: 'Удалить',
+  variant: 'destructive',
 };
 
-export const Destructive: Story = {
-  args: {
-    variant: 'destructive',
-    children: 'Удалить',
-  },
+export const WithIcon = Template.bind({});
+WithIcon.args = {
+  children: 'Добавить',
+  variant: 'primary',
+  icon: <Icon name="plus" />,
+  iconPosition: 'left',
 };
+
+export const Loading = Template.bind({});
+Loading.args = {
+  children: 'Загрузка',
+  variant: 'primary',
+  loading: true,
+};
+
+export const Disabled = Template.bind({});
+Disabled.args = {
+  children: 'Недоступно',
+  variant: 'primary',
+  disabled: true,
+};
+
+export const AllSizes = () => (
+  <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+    <Button size="sm">Маленькая</Button>
+    <Button size="md">Средняя</Button>
+    <Button size="lg">Большая</Button>
+  </div>
+);

@@ -1,10 +1,5 @@
 import 'styled-components';
-import { theme } from './theme';
 
-// Получаем тип нашей темы
-type AppTheme = typeof theme;
-
-// Расширяем DefaultTheme styled-components
 declare module 'styled-components' {
   export interface DefaultTheme {
     colors: {
@@ -12,11 +7,13 @@ declare module 'styled-components' {
       accent: string;
       destructive: string;
       success: string;
+      warning?: string;
       neutral: string;
       bg: string;
       lightBg: string;
       text: string;
       textSecondary: string;
+      border: string;
     };
     radii: {
       sm: string;
