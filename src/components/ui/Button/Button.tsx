@@ -1,76 +1,106 @@
-import React from 'react';
 import styled, { css } from 'styled-components';
+import type { DefaultTheme } from 'styled-components';
+import React from "react";
 
-type Variant = 'primary' | 'secondary' | 'outline' | 'destructive';
-type Size = 'sm' | 'md' | 'lg';
+export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'destructive';
+export type ButtonSize = 'sm' | 'md' | 'lg';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: Variant;
-  size?: Size;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
   icon?: React.ReactNode;
   iconPosition?: 'left' | 'right';
   loading?: boolean;
 }
 
-const sizeStyles = {
-  sm: '6px 10px',
-  md: '10px 14px',
-  lg: '12px 18px'
+const sizeStyles: Record<ButtonSize, ReturnType<typeof css>> = {
+  sm: css`
+    min-height: 32px;
+    padding: 0 12px;
+    font-size: 14px;
+  `,
+  md: css`
+    min-height: 40px;
+    padding: 0 16px;
+    font-size: 15px;
+  `,
+  lg: css`
+    min-height: 48px;
+    padding: 0 20px;
+    font-size: 16px;
+  `,
 };
 
-const Root = styled.button<{ variant: Variant; size: Size; loading?: boolean }>`
+const variantStyles = (variant: ButtonVariant, theme: DefaultTheme) => {
+  switch (variant) {
+    case 'primary':
+      return css`
+        background: ${theme.colors.primary};
+        color: #fff;
+        &:hover:not(:disabled) {
+          background: ${theme.colors.primaryHover};
+        }
+        &:active:not(:disabled) {
+          background: ${theme.colors.primaryActive};
+        }
+      `;
+    case 'secondary':
+      return css`
+        background: ${theme.colors.bg};
+        color: ${theme.colors.primary};
+        border-color: ${theme.colors.primary};
+        &:hover:not(:disabled) {
+          background: rgba(0, 122, 255, 0.08);
+        }
+      `;
+    case 'outline':
+      return css`
+        background: transparent;
+        border-color: ${theme.colors.border};
+        color: ${theme.colors.text};
+        &:hover:not(:disabled) {
+          background: ${theme.colors.lightBg};
+        }
+      `;
+    case 'destructive':
+      return css`
+        background: ${theme.colors.destructive};
+        color: #fff;
+        &:hover:not(:disabled) {
+          background: ${theme.colors.destructiveHover};
+        }
+      `;
+  }
+};
+
+const Root = styled.button<{ variant: ButtonVariant; size: ButtonSize; loading?: boolean }>`
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  border-radius: ${(p) => p.theme.radii.md};
-  padding: ${(p) => sizeStyles[p.size]};
+  border-radius: ${({ theme }) => theme.radii.md};
   font-weight: 600;
-  font-size: ${(p) => p.theme.fontSizes.body};
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  ${({ size }) => sizeStyles[size]};
 
-  ${(p) =>
-    p.variant === 'primary' &&
-    css`
-      background: ${p.theme.colors.primary};
-      color: #fff;
-    `}
+  svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
 
-  ${(p) =>
-    p.variant === 'secondary' &&
-    css`
-      background: #fff;
-      color: ${p.theme.colors.primary};
-      border: 1px solid ${p.theme.colors.primary};
-    `}
-
-  ${(p) =>
-    p.variant === 'outline' &&
-    css`
-      background: transparent;
-      border: 1px solid ${p.theme.colors.border};
-      color: ${p.theme.colors.text};
-    `}
-
-  ${(p) =>
-    p.variant === 'destructive' &&
-    css`
-      background: ${p.theme.colors.destructive};
-      color: #fff;
-    `}
+  ${({ variant, theme }) => variantStyles(variant, theme)}
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
   }
 
-  &:not(:disabled):hover {
-    opacity: 0.9;
-  }
-
-  &:not(:disabled):active {
-    transform: translateY(1px);
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.focus};
+    outline-offset: 2px;
   }
 `;
 
@@ -104,5 +134,4 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 Button.displayName = 'Button';
-
 export default Button;

@@ -1,8 +1,7 @@
-import React from 'react';
-import { Meta, StoryFn } from '@storybook/react-vite';
+import type { Meta, StoryFn } from '@storybook/react-vite';
 import { ThemeProvider } from 'styled-components';
 import { theme } from '../../../styles/theme';
-import { Button, ButtonProps } from './Button';
+import { Button, ButtonProps, ButtonVariant, ButtonSize } from './Button';
 import Icon from '../Icon/Icon';
 
 export default {
@@ -18,22 +17,18 @@ export default {
   argTypes: {
     variant: {
       control: { type: 'select' },
-      options: ['primary', 'secondary', 'outline', 'destructive'],
+      options: ['primary', 'secondary', 'outline', 'destructive'] satisfies ButtonVariant[],
     },
     size: {
       control: { type: 'select' },
-      options: ['sm', 'md', 'lg'],
+      options: ['sm', 'md', 'lg'] satisfies ButtonSize[],
     },
     iconPosition: {
       control: { type: 'radio' },
       options: ['left', 'right'],
     },
-    loading: {
-      control: 'boolean',
-    },
-    disabled: {
-      control: 'boolean',
-    },
+    loading: { control: 'boolean' },
+    disabled: { control: 'boolean' },
   },
 } as Meta<typeof Button>;
 
