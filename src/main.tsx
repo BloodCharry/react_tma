@@ -6,35 +6,44 @@ import { theme } from './styles/theme';
 import { GlobalStyle } from './styles/GlobalStyle';
 import App from './app/App';
 
-
-// Создаем экземпляр QueryClient
+// Создаём экземпляр QueryClient
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false, // Отключить автоматическое обновление при фокусе окна
-      retry: 1, // Количество попыток повтора запроса при ошибке
+      refetchOnWindowFocus: false,
+      retry: 1,
     },
   },
 });
 
-// Инициализация MSW для разработки
-// if (import.meta.env.DEV) {
-//   import('./mocks/browser').then(({ worker }) => {
-//     worker.start({ onUnhandledRequest: 'bypass' }); // Запуск MSW воркера
-//   }).catch((error) => {
-//     console.error('Failed to start MSW worker:', error);
-//   });
-// }
+// Функция старта приложения
+const startApp = () => {
+  ReactDOM.createRoot(document.getElementById('root')!).render(
+    <React.StrictMode>
+      <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <GlobalStyle />
+          <App />
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        </QueryClientProvider>
+      </ThemeProvider>
+    </React.StrictMode>
+  );
+};
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <QueryClientProvider client={queryClient}>
-        <GlobalStyle />
-        <App />
-        {/* панель инструментов React Query для разработки */}
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-      </QueryClientProvider>
-    </ThemeProvider>
-  </React.StrictMode>,
-);
+// Если dev-режим — подключаем MSW перед рендером
+if (import.meta.env.DEV) {
+  import('./mocks/browser')
+    .then(({ worker }) => worker.start({ onUnhandledRequest: 'bypass' }))
+    .then(startApp)
+    .catch((err) => {
+      console.error('⚠️ Failed to start MSW worker:', err);
+      startApp();
+    })
+    .catch((error) => {
+      console.error('⚠️ Failed to start MSW worker:', error);
+      startApp(); // даже если воркер не стартовал — рендерим
+    });
+} else {
+  startApp();
+}

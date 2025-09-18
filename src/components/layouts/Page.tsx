@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import {BottomTabBar} from "./BottomTabBar/BottomTabBar";
 
 const PageWrapper = styled.div`
   padding: 60px 0 80px 0; /* Отступы для Header и BottomNav */
@@ -30,7 +31,9 @@ export interface PageProps {
 }
 
 export const Page: React.FC<PageProps> = ({ children, className }) => {
-  return <PageWrapper className={className}>{children}</PageWrapper>;
+  return <PageWrapper className={className}>{children}
+  <BottomTabBar />
+  </PageWrapper>;
 };
 
 export interface SectionProps {

@@ -1,12 +1,12 @@
-// app/App.tsx
 import { RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { theme } from '../styles/theme';
 import { createAppRouter } from './routes';
-import { AuthProvider } from "./AuthProvider";
-import { useAuth } from "../hooks/useAuth";
+import { AuthProvider } from './AuthProvider';
+import { useAuth } from '../hooks/useAuth';
 import { useAuthInit } from './useAuthInit';
 import type { Role } from '../types/types';
+import { RoleSwitcher } from '../components/dev/RoleSwitcher';
 
 function AppContent() {
   const { role } = useAuth();
@@ -21,10 +21,14 @@ function AppContent() {
 
 export default function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
-    </ThemeProvider>
+    <>
+      <ThemeProvider theme={theme}>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </ThemeProvider>
+
+      {import.meta.env.DEV && <RoleSwitcher />}
+    </>
   );
 }
